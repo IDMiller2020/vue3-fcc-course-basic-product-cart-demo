@@ -1,14 +1,28 @@
 const app = Vue.createApp({
   data() {
     return {
-      isVisible: false
+      isVisible: false,
+      selections: {
+        carrots: 0,
+        pineapples: 0,
+        cherries: 0
+      },
+      cart: {
+        carrots: 0,
+        pineapples: 0,
+        cherries: 0
+      }
     }
   },
   methods: {
     toggleSidebar() {
       this.isVisible = !this.isVisible
+    },
+    addToCart(type) {
+      this.cart[type] += this.selections[type]
+      console.log(this.cart)
     }
-  },
+  }
 })
 app.component('side-bar', {
   template: `
@@ -38,9 +52,9 @@ app.component('side-bar', {
           <tr>
             <td><i class="icofont-carrot icofont-3x"></i></td>
             <td>Carrot</td>
-            <td>$1.00</td>
-            <td class="center">1</td>
-            <td>$1.00</td>
+            <td>$4.82</td>
+            <td class="center">{{ cart.carrots }}</td>
+            <td>\${{ (4.82 * cart.carrots).toFixed(2) }}</td>
             <td class="center">
               <button class="btn btn-light cart-remove">
                 &times;
@@ -52,13 +66,18 @@ app.component('side-bar', {
 
       <p class="center"><em>No items in cart</em></p>
       <div class="spread">
-        <span><strong>Total:</strong> $1.00</span>
+        <span><strong>Total: </strong>\${{ cartTotal }}</span>
         <button class="btn btn-light">Checkout</button>
       </div>
     </div>
   </div>
 </aside>
   `,
-  props: ['toggle']
+  props: ['toggle', 'cart', 'total'],
+  computed: {
+    cartTotal() {
+      return (this.cart.carrots * 4.82).toFixed(2)
+    }
+  }
 })
 app.mount('#app')
